@@ -1,10 +1,11 @@
-from fastapi import FastAPI, File, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, File, UploadFile,Request
+from fastapi.middleware.cors import  CORSMiddleware
 import uvicorn
 import numpy as np
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
+
 
 app = FastAPI()
 
@@ -12,12 +13,21 @@ origins = [
     "http://localhost",
     "http://localhost:3000",]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],)
+app.add_middleware(CORSMiddleware,
+                   allow_origins=['*'],
+                   allow_credentials=True,
+                   allow_methods=['*'],
+                   allow_headers=['*'])
+
+@app.middleware("http")
+async def add_cors_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
+
 
 MODEL = tf.keras.models.load_model("../model/1")
 

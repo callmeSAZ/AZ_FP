@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 500,
   },
   gridContainer: {
-    justifyContent: "center",
+    justify : "center",
     padding: "4em 1em 0 1em",
   },
   mainContainer: {
@@ -158,7 +158,7 @@ export const ImageUpload = () => {
       formData.append("file", selectedFile);
       let res = await axios({
         method: "post",
-        url: process.env.REACT_APP_API_URL,
+        url: 'http://localhost:8000/predict',
         data: formData,
       });
       if (res.status === 200) {
@@ -224,7 +224,7 @@ export const ImageUpload = () => {
           className={classes.gridContainer}
           container
           direction="row"
-          justifyContent="center"
+          justify="center"
           alignItems="center"
           spacing={2}
         >
